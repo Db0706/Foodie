@@ -215,9 +215,13 @@ export async function getUserProfile(wallet: string): Promise<User | null> {
     }
 
     const userDoc = userSnapshot.docs[0];
+    const data = userDoc.data();
     return {
-      id: userDoc.id,
-      ...userDoc.data(),
+      ...data,
+      wallet: data.wallet || wallet.toLowerCase(),
+      totalEarned: data.totalEarned || 0,
+      postsCount: data.postsCount || 0,
+      lastActive: data.lastActive || Date.now(),
     } as User;
   } catch (error) {
     console.error('Error fetching user profile:', error);
