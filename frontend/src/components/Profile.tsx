@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
 import { useAccount } from 'wagmi';
-import Image from 'next/image';
 import { useTasteBalance, useUserNFTs } from '@/lib/hooks/useContracts';
 import { getPostsByCreator, getUserProfile, updateUserProfile } from '@/lib/firebase';
 import { shortenAddress, formatTaste, copyToClipboard, validateImageFile, compressImage } from '@/lib/utils';
@@ -132,13 +131,11 @@ export default function Profile() {
             {/* Avatar */}
             <div className="relative group">
               {profilePicture ? (
-                <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden">
-                  <Image
+                <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden">
+                  <img
                     src={profilePicture}
                     alt="Profile"
-                    fill
-                    className="object-cover"
-                    unoptimized
+                    className="w-full h-full object-cover"
                   />
                 </div>
               ) : (
@@ -283,12 +280,11 @@ export default function Profile() {
           {userPosts.map((post) => (
             <div key={post.id} className="card hover:shadow-lg transition-shadow cursor-pointer">
               <div className="relative h-48">
-                <Image
+                <img
                   src={post.imageURL}
                   alt={post.caption}
-                  fill
-                  className="object-cover"
-                  unoptimized
+                  className="w-full h-full object-cover"
+                  loading="lazy"
                 />
                 <div className="absolute top-2 right-2">
                   <span

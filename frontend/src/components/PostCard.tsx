@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useAccount } from 'wagmi';
-import Image from 'next/image';
 import { useLikePost, useRewardAmounts } from '@/lib/hooks/useContracts';
 import { shortenAddress, getRelativeTime } from '@/lib/utils';
 import { addLike, incrementLikeCount } from '@/lib/firebase';
@@ -22,6 +21,8 @@ export default function PostCard({ post, onLikeSuccess }: PostCardProps) {
 
   const [hasLiked, setHasLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(post.likeCount || 0);
+  const [imageError, setImageError] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
 
   const isOwnPost = address?.toLowerCase() === post.creatorWallet.toLowerCase();
 
@@ -65,14 +66,29 @@ export default function PostCard({ post, onLikeSuccess }: PostCardProps) {
     <div className="card group">
       <div className="flex flex-col sm:flex-row">
         {/* Image */}
-        <div className="relative w-full sm:w-64 md:w-72 h-48 sm:h-56 md:h-64 flex-shrink-0">
-          <Image
-            src={post.imageURL}
-            alt={post.caption}
-            fill
-            className="object-cover"
-            unoptimized
-          />
+        <div className="relative w-full sm:w-64 md:w-72 h-48 sm:h-56 md:h-64 flex-shrink-0 bg-neutral-100">
+          {!imageError ? (
+            <>
+              {!imageLoaded && (
+                <div className="absolute inset-0 flex items-center justify-center bg-neutral-100">
+                  <div className="animate-pulse text-neutral-400 text-sm">Loading...</div>
+                </div>
+              )}
+              <img
+                src={post.imageURL}
+                alt={post.caption}
+                className={`w-full h-full object-cover ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
+                onLoad={() => setImageLoaded(true)}
+                onError={() => setImageError(true)}
+                loading="lazy"
+              />
+            </>
+          ) : (
+            <div className="absolute inset-0 flex flex-col items-center justify-center bg-neutral-100 text-neutral-400">
+              <div className="text-4xl mb-2">🍽️</div>
+              <div className="text-xs">Image unavailable</div>
+            </div>
+          )}
         </div>
 
         {/* Content */}
