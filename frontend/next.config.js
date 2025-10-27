@@ -7,6 +7,7 @@ const nextConfig = {
     return config;
   },
   images: {
+    unoptimized: true, // Disable Next.js image optimization for IPFS
     domains: ['ipfs.io', 'gateway.pinata.cloud', 'nftstorage.link'],
     remotePatterns: [
       {
@@ -16,6 +17,10 @@ const nextConfig = {
       {
         protocol: 'https',
         hostname: '**.ipfs.dweb.link',
+      },
+      {
+        protocol: 'https',
+        hostname: 'gateway.pinata.cloud',
       },
     ],
   },
